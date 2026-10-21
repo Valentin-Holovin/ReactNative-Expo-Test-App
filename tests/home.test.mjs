@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { canRefreshBalances, getBalanceRetryAt, getBalancePollInterval, getBalanceFreshness } from '../src/screens/Home/balancePolicy.ts';
+import { canRefreshBalances, getBalanceRetryAt, getBalancePollInterval, getBalanceFreshness } from '../src/queries/balancePolicy.ts';
 
 const timestamp = Date.parse('2026-10-21T19:00:00Z');
 

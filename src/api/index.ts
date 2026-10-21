@@ -1,3 +1,5 @@
+import { claimStorageKey } from '../claims/browserStorage';
+
 import { createActivityApi } from './activity';
 import { createBalancesApi } from './balances';
 import { createClaimsApi } from './claims';
@@ -6,6 +8,7 @@ import { createApiClient } from './client';
 export function createCashMineApi(token: string) {
   const client = createApiClient(token);
   return {
+    getClaimStorageKey: () => claimStorageKey(token),
     ...createBalancesApi(client),
     ...createActivityApi(client),
     ...createClaimsApi(client),

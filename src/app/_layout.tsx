@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { ActivityIndicator } from 'react-native';
 
+import { ClaimsProvider } from '@/claims/ClaimsProvider';
 import { Screen } from '@/components/Screen';
 import { SessionProvider, useSession } from '@/session/SessionProvider';
 
@@ -16,7 +17,7 @@ export default function RootLayout() {
       <SafeAreaProvider>
         <StatusBar style="dark" />
         <SessionProvider>
-          <SessionNavigator />
+          <ClaimsProvider><SessionNavigator /></ClaimsProvider>
         </SessionProvider>
       </SafeAreaProvider>
     </QueryClientProvider>

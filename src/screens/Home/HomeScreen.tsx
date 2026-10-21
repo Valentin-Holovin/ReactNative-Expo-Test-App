@@ -13,6 +13,14 @@ export default function HomeScreen() {
   return (
     <Screen title="Balances">
       <Action title="Change API token" secondary onPress={() => router.navigate('/token')} />
+      {screen.claimAttempt ? (
+        <Card title="Latest claim">
+          <Text style={ui.text}>{screen.claimAttempt.body.amount} {screen.claimAttempt.body.asset} · {screen.claimAttempt.claim?.status ?? (screen.claimAttempt.state === 'rejected' ? 'rejected' : 'checking result')}</Text>
+          {!screen.canClaim ? <Text style={ui.muted}>A claim is being resolved or the balance snapshot is catching up. New claims are temporarily locked.</Text> : null}
+          <Action title="View claim status" onPress={() => router.navigate('/claim-status')} />
+        </Card>
+      ) : null}
+      {screen.claimRecoveryError ? <Text accessibilityRole="alert" style={ui.muted}>{screen.claimRecoveryError}</Text> : null}
       {screen.error ? (
         <Card title={screen.unauthorized ? 'Connection expired' : 'Could not update balances'}>
           <Text accessibilityRole="alert" style={ui.text}>{screen.error}</Text>
@@ -52,7 +60,7 @@ export default function HomeScreen() {
         </Card>
       ))}
       <View style={{ gap: 16 }}>
-        <Action title="Claim payback" disabled={!balances || !balances.assets.some((asset) => asset.available !== '0') || !!screen.error}
+        <Action title="Claim payback" disabled={!screen.canClaim || !balances || !balances.assets.some((asset) => asset.available !== '0') || !!screen.error}
           onPress={() => router.navigate('/claim')} />
         <Action title="Activity" secondary onPress={() => router.navigate('/activity')} />
       </View>

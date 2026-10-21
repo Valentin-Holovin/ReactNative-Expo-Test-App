@@ -22,9 +22,24 @@ export function createApiClient(token: string) {
     },
   });
 
+  let blockedUntil = 0;
+  client.interceptors.request.use((config) => {
+    const remaining = blockedUntil - Date.now();
+    if (remaining > 0) {
+      throw new ApiError('Too many requests. Please wait.', 'RATE_LIMITED', 429, undefined, remaining);
+    }
+    return config;
+  });
+
   client.interceptors.response.use(
     (response) => response,
-    (error: unknown) => Promise.reject(toApiError(error)),
+    (error: unknown) => {
+      const normalized = toApiError(error);
+      if (normalized.code === 'RATE_LIMITED') {
+        blockedUntil = Math.max(blockedUntil, Date.now() + (normalized.retryAfterMs ?? 1000));
+      }
+      return Promise.reject(normalized);
+    },
   );
 
   // No automatic retries, particularly for claim submissions.
