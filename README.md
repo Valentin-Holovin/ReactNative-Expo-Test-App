@@ -22,10 +22,16 @@ npm test
 npm run typecheck
 npm run lint
 npx expo-doctor
-npx expo export --platform web
+npm run build:web
 ```
 
-Текущая конфигурация `web.output: server` требует хостинг с поддержкой Expo server output. Для обычного static hosting потребуется соответствующая настройка экспорта и маршрутов.
+## Netlify
+
+Сборка — SPA (`web.output: single`). После `npm run build:web` папка `dist` готова для загрузки через Netlify Drop. Загружайте только `dist`, а не исходники проекта.
+
+При подключении Git-репозитория Netlify использует `netlify.toml`: Node.js 24, команда `npm run build:web`, publish directory `dist`. Файл `public/_redirects` копируется в сборку и направляет вложенные URL на `index.html`, чтобы обновление `/claim` или `/activity` работало.
+
+Токен вводится пользователем в приложении; переменные окружения с личным токеном не нужны.
 
 Live link: пока не указан.
 
