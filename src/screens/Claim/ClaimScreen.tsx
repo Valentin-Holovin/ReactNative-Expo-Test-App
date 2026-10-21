@@ -1,12 +1,13 @@
-import { Link } from 'expo-router';
+import { router } from 'expo-router';
+import { Button } from 'react-native';
 
 import { Screen } from '@/components/Screen';
 
 export default function ClaimScreen() {
   return (
     <Screen title="Claim payback">
-      <Link href="/claim-status">View claim status</Link>
-      <Link href="/">Back to balances</Link>
+      <Button title="View claim status" onPress={() => router.navigate('/claim-status')} />
+      <Button title="Back to balances" onPress={() => router.navigate('/')} />
     </Screen>
   );
 }

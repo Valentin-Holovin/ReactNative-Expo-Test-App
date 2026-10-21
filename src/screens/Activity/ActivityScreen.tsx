@@ -1,11 +1,12 @@
-import { Link } from 'expo-router';
+import { router } from 'expo-router';
+import { Button } from 'react-native';
 
 import { Screen } from '@/components/Screen';
 
 export default function ActivityScreen() {
   return (
     <Screen title="Activity">
-      <Link href="/">Back to balances</Link>
+      <Button title="Back to balances" onPress={() => router.navigate('/')} />
     </Screen>
   );
 }
