@@ -125,7 +125,7 @@ export function createClaimController(deps: Dependencies) {
       update({ attempt: next, error: null });
       try { await save(next); }
       catch { update({ error: 'The result was received, but could not be saved. Your original attempt is still recoverable.' }); }
-      deps.onChange();
+      if (!attempt.claim || attempt.claim.status !== claim.status) deps.onChange();
     } catch (error) {
       // Keep the durable original key/body even when cancellation loses the response.
       if (deps.signal.aborted) return;
@@ -140,7 +140,7 @@ export function createClaimController(deps: Dependencies) {
       };
       update({ attempt: next, error: failureMessage(error) });
       try { await save(next); } catch { /* Original attempt remains durable. */ }
-      deps.onChange();
+      if (next.state === 'rejected') deps.onChange();
     }
   }
   return {

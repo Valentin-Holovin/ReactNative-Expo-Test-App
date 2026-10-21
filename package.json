@@ -42,7 +42,7 @@
     "typecheck": "tsc --noEmit",
     "test:session": "node --test tests/session.test.mjs",
     "test:money": "node --test tests/money.test.mjs",
-    "test": "node --test tests/*.test.mjs"
+    "test": "node --test tests/*.test.mjs tests/*.test.cjs"
   },
   "private": true
 }

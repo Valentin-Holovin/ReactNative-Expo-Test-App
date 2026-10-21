@@ -36,7 +36,10 @@ export function ClaimsProvider({ children }: PropsWithChildren) {
           signal: request.signal,
           createKey: () => globalThis.crypto.randomUUID(),
           withLock: work => withClaimLock(key, request.signal, work),
-          onChange: () => { void queryClient.invalidateQueries({ queryKey: ['session', activeSession.id, 'balances'] }); },
+          onChange: () => {
+            void queryClient.invalidateQueries({ queryKey: ['session', activeSession.id, 'balances'] });
+            void queryClient.invalidateQueries({ queryKey: ['session', activeSession.id, 'activity'] });
+          },
         });
         setController({ id: activeSession.id, controller: next });
         await next.restore();

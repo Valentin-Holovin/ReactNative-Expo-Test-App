@@ -58,7 +58,7 @@ export const ui = StyleSheet.create({
   label: { fontSize: 16, fontWeight: '500', color: '#111' },
   input: { width: '100%', minWidth: 0, minHeight: 48, borderWidth: 1, borderColor: '#888', borderRadius: 6, padding: 12, fontSize: 16, color: '#111', backgroundColor: '#fff' },
   button: { minHeight: 48, paddingVertical: 12, paddingHorizontal: 16, justifyContent: 'center', alignItems: 'center', borderRadius: 6, backgroundColor: '#1f2937' },
-  buttonText: { fontSize: 16, lineHeight: 22, fontWeight: '600', color: '#fff', textAlign: 'center', flexShrink: 1 },
+  buttonText: { maxWidth: '100%', fontSize: 16, lineHeight: 22, fontWeight: '600', color: '#fff', textAlign: 'center', flexShrink: 1 },
   secondary: { backgroundColor: '#f3f4f6', borderWidth: 1, borderColor: '#9ca3af' },
   secondaryText: { color: '#111' },
   disabled: { opacity: 0.45 },

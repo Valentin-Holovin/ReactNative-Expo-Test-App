@@ -1,31 +1,32 @@
-# ReactNative Expo Test App
+# CashMine Expo app
 
-Минимальное приложение Expo с одним экраном Hello World.
+Expo / TypeScript приложение для просмотра payback-балансов и создания Claim.
 
 ## Запуск
 
+Требуется Node.js 24+ (для запуска TypeScript unit-тестов без отдельного загрузчика).
+
 ```sh
 npm install
-npm start
+npm run web
 ```
 
-`npm run ios` — iOS, `npm run android` — Android, `npm run web` — браузер.
+При первом входе введите API token. Он хранится в браузере; смена доступна на Home. API URL задан в `src/api/client.ts`.
 
-## Библиотеки
+Работают: балансы и USD totals, свежесть снимка, Claim с Max/комиссией/подтверждением, восстановление неизвестного результата с тем же idempotency key, отслеживание статуса и пагинация Activity.
 
-- Expo Router — навигация; экраны находятся в `src/app`.
-- TanStack Query — запросы и кеш серверных данных; провайдер подключён в `_layout.tsx`.
-- Zustand — состояние приложения.
-- AsyncStorage — локальное хранение данных.
-- React Native Reanimated и Gesture Handler — анимации и жесты.
-- Safe Area Context — безопасные отступы экрана.
-
-Zustand и AsyncStorage установлены для будущих задач. Демонстрационных хранилищ и запросов нет.
-
-## Проверки
+## Проверки и сборка
 
 ```sh
+npm test
 npm run typecheck
 npm run lint
-npx expo install --check
+npx expo-doctor
+npx expo export --platform web
 ```
+
+Текущая конфигурация `web.output: server` требует хостинг с поддержкой Expo server output. Для обычного static hosting потребуется соответствующая настройка экспорта и маршрутов.
+
+Live link: пока не указан.
+
+Результаты проверки и ограничения: [QA_REPORT.md](QA_REPORT.md).

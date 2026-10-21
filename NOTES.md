@@ -1,0 +1,21 @@
+# Implementation notes
+
+## Decisions
+
+**Amounts.** API amounts and form input remain decimal strings; calculations use `decimal.js`, not JavaScript floating-point arithmetic. Precision is validated against each asset's `decimals`, including trailing input zeros. Invalid formats, minimum/available bounds and a non-positive net amount block submission. The fee comes out of the entered amount, so Max is the full available balance. USD totals include available, pending and claiming; rounding happens only for display after summing. An alternative was integer minor units with BigInt; decimal strings match the API and keep prices and asset precision straightforward.
+
+**Balances after a claim.** The initial AI discussion compared optimistic subtraction with keeping the server snapshot and showing the operation separately ([original discussion](ai-logs/conversation.md#message-021)). The implementation uses the latter. It avoids a balance dropping and jumping back on failure or being deducted twice when a delayed snapshot arrives. Home displays snapshot age and the latest claim. One unresolved claim per token is permitted; new claims stay locked until settlement and a balance snapshot with `asOf >= claim.updatedAt`. This is deliberately more restrictive than parallel claims per asset, but keeps reconciliation understandable. `pending` payback and funds currently `claiming` are shown separately.
+
+**Unknown submission result.** Timeout, network failure and 5xx do not prove rejection. Before POST, the exact body and idempotency key must be durably saved. Recovery replays that same body/key until an ID is known, then uses GET to track status. A new key could duplicate a claim. Definite validation rejection allows correction; a key/body mismatch remains locked. Web Locks serialize operations across tabs, and saved attempts are scoped by a token hash. The token itself is stored in browser storage, never source code or query keys. A 401 stops the relevant retries; 429 delays further requests.
+
+## Working with AI
+
+1. **An underspecified prompt needed refinement.** The initial request to create an Expo project produced the standard template. The follow-up explicitly requested only Hello World plus basic libraries; the demo screens were then removed ([messages 002–014](ai-logs/conversation.md#message-002)). This made the intended starting scope concrete.
+2. **Risky AI code was caught through browser testing.** During QA, an intermediate fix keyed the whole navigation stack by session ID. Switching tokens then remounted the token screen before its redirect completed, leaving it on the token route. The browser exposed the missing Home action. The fix was narrowed to key only the Claim component; rechecking confirmed a successful redirect and an empty amount ([original patch, failure and correction](ai-logs/qa-tool-excerpts.md)). Passing typecheck alone would not have caught this.
+3. **The developer rejected a navigation choice.** The developer explicitly requested an Expo Router method instead of Link. The implementation changed to button handlers using `router.navigate()` ([original request and follow-up](ai-logs/conversation.md#message-057)). This was a developer preference; it is not evidence that Link itself caused Metro to restart.
+
+## Not done / known issues
+
+The final QA passed 52 tests, TypeScript, ESLint, Expo Doctor and a web export. Browser checks covered 320/390/768 px, timeout/reload recovery, terminal claim outcomes, errors and paginated history; see [QA_REPORT.md](QA_REPORT.md). Live API GETs succeeded; fault injection and claim submission in that QA used a separate local mock.
+
+No live deployment link is recorded. Current server output needs compatible hosting or a static-export configuration. Physical devices, mobile keyboards, screen readers and real offline transitions remain unverified. Claim recovery requires browser storage, Web Crypto, Web Locks and HTTPS. The AI export preserves available user/assistant messages with privacy redactions and selected QA tool records, not every tool call. Commit cadence and submission timing have not been audited. The task document still contains a personal token and must be sanitized before publication.
